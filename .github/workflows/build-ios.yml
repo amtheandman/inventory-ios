@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
@@ -128,7 +128,7 @@ jobs:
 
       - name: pod install（拉取 Capacitor 原生依赖）
         working-directory: ios/App
-        run: pod install --repo-update
+        run: pod install
 
       - name: 调试：列出可用 scheme
         working-directory: ios/App
