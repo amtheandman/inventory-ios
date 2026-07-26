@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#1565c0" />
+  <title>进销存管理</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部应用栏 -->
+    <header class="appbar">
+      <div class="appbar-title">进销存管理</div>
+      <div class="appbar-actions">
+        <button id="themeToggle" class="icon-btn" title="切换主题">🌙</button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main id="screen">
+
+      <!-- 表格型（进销存 / 记账） -->
+      <section id="tableScreen" class="screen">
+        <div class="subbar">
+          <button id="archiveBtn" class="archive-chip">
+            <span class="ic">📁</span><span id="archiveName">今天</span><span class="caret">▾</span>
+          </button>
+          <div class="find-box">
+            <input id="findInput" type="search" placeholder="查找品名/摘要…" enterkeyhint="search" />
+            <button id="findBtn" class="icon-btn">🔍</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button id="addRowBtn" class="tbtn primary">＋ 添加</button>
+          <button id="selectBtn" class="tbtn">☑ 选择</button>
+          <button id="importBtn" class="tbtn">导入</button>
+          <button id="exportBtn" class="tbtn">导出</button>
+          <button id="summaryBtn" class="tbtn">汇总</button>
+        </div>
+
+        <div class="table-scroll">
+          <table id="dataTable">
+            <thead><tr id="headRow"></tr></thead>
+            <tbody id="bodyRows"></tbody>
+          </table>
+          <div id="emptyHint" class="empty-hint">暂无数据，点「＋ 添加」开始</div>
+        </div>
+
+        <div id="selBar" class="selbar hidden">
+          <span id="selCount">已选 0 项</span>
+          <button id="selDeleteBtn" class="tbtn danger">删除选中</button>
+          <button id="selCancelBtn" class="tbtn">取消</button>
+        </div>
+      </section>
+
+      <!-- 记事本 -->
+      <section id="noteScreen" class="screen hidden">
+        <div class="subbar">
+          <button id="noteArchiveBtn" class="archive-chip">
+            <span class="ic">📁</span><span id="noteArchiveName">今天</span><span class="caret">▾</span>
+          </button>
+          <button id="noteFindBtn" class="tbtn">查找/替换</button>
+        </div>
+        <div class="editor-wrap">
+          <div id="lineNumbers" class="linenum"></div>
+          <textarea id="noteText" spellcheck="false" placeholder="在这里记录…"></textarea>
+        </div>
+        <div id="noteStatus" class="note-status">0 行</div>
+      </section>
+
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="bottomnav">
+      <button data-mode="进销存" class="active"><span class="bi">📦</span><span>进销存</span></button>
+      <button data-mode="记账"><span class="bi">💰</span><span>记账</span></button>
+      <button data-mode="记事本"><span class="bi">📝</span><span>记事本</span></button>
+    </nav>
+
+    <!-- 浮动按钮：添加行 / 新建记事本 -->
+    <button id="fab" class="fab">＋</button>
+  </div>
+
+  <!-- ===================== 底部弹层 ===================== -->
+
+  <!-- 档案列表 -->
+  <div id="sheetArchive" class="sheet-mask hidden">
+    <div class="sheet">
+      <div class="sheet-head">
+        <span id="sheetArchiveTitle">档案列表</span>
+        <button class="sheet-close" data-close="sheetArchive">✕</button>
+      </div>
+      <div class="sheet-search">
+        <input id="archiveSearch" type="search" placeholder="搜索档案…" />
+      </div>
+      <div id="archiveList" class="sheet-list"></div>
+      <div class="sheet-foot">
+        <button id="archiveNewBtn" class="tbtn primary">＋ 新建档案</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 行编辑 -->
+  <div id="sheetEdit" class="sheet-mask hidden">
+    <div class="sheet">
+      <div class="sheet-head">
+        <span id="sheetEditTitle">编辑</span>
+        <button class="sheet-close" data-close="sheetEdit">✕</button>
+      </div>
+      <div id="editFields" class="sheet-form"></div>
+      <div class="sheet-foot row">
+        <button id="editDeleteBtn" class="tbtn danger">删除此行</button>
+        <button id="editSaveBtn" class="tbtn primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 汇总统计 -->
+  <div id="sheetSummary" class="sheet-mask hidden">
+    <div class="sheet">
+      <div class="sheet-head">
+        <span>汇总统计</span>
+        <button class="sheet-close" data-close="sheetSummary">✕</button>
+      </div>
+      <div class="sheet-form">
+        <label class="field">
+          <span>年份（如 2025，留空=全部）</span>
+          <input id="sumYear" type="number" inputmode="numeric" placeholder="2025" />
+        </label>
+        <label class="field">
+          <span>月份（1-12，留空=全年）</span>
+          <input id="sumMonth" type="number" inputmode="numeric" placeholder="留空" />
+        </label>
+      </div>
+      <div class="sheet-foot">
+        <button id="sumRunBtn" class="tbtn primary">开始统计</button>
+      </div>
+      <div id="sumResult" class="sum-result hidden">
+        <table id="sumTable"><thead></thead><tbody></tbody></table>
+        <button id="sumExportBtn" class="tbtn">导出 CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 记事本 查找/替换 -->
+  <div id="sheetNoteFind" class="sheet-mask hidden">
+    <div class="sheet">
+      <div class="sheet-head">
+        <span>查找 / 替换</span>
+        <button class="sheet-close" data-close="sheetNoteFind">✕</button>
+      </div>
+      <div class="sheet-form">
+        <label class="field"><span>查找</span><input id="nfFind" type="text" /></label>
+        <label class="field"><span>替换为</span><input id="nfReplace" type="text" /></label>
+      </div>
+      <div class="sheet-foot row">
+        <button id="nfFindBtn" class="tbtn">查找下一个</button>
+        <button id="nfReplaceBtn" class="tbtn primary">替换</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 档案说明 -->
+  <div id="sheetNote" class="sheet-mask hidden">
+    <div class="sheet">
+      <div class="sheet-head">
+        <span id="noteSheetTitle">档案说明</span>
+        <button class="sheet-close" data-close="sheetNote">✕</button>
+      </div>
+      <textarea id="noteContent" class="note-area" placeholder="给这个档案写点说明…"></textarea>
+      <div class="sheet-foot">
+        <button id="noteSaveBtn" class="tbtn primary">保存说明</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 重命名 -->
+  <div id="sheetRename" class="sheet-mask hidden">
+    <div class="sheet">
+      <div class="sheet-head"><span>重命名档案</span><button class="sheet-close" data-close="sheetRename">✕</button></div>
+      <div class="sheet-form">
+        <label class="field"><span>新名称</span><input id="renameInput" type="text" /></label>
+      </div>
+      <div class="sheet-foot">
+        <button id="renameOkBtn" class="tbtn primary">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

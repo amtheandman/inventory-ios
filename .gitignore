@@ -1,0 +1,26 @@
+# 依赖与构建产物
+node_modules/
+dist/
+.cache/
+
+# Capacitor iOS 原生构建产物（Pods 不入库）
+ios/App/build/
+ios/App/Pods/
+ios/App/DerivedData/
+*.xcarchive
+
+# Android（本项目主目标是 iOS，Android 仅作备用）
+android/
+app/build/
+.gradle/
+build/
+local.properties
+*.apk
+
+# 本地数据
+data/
+original/
+
+# 系统
+.DS_Store
+Thumbs.db

@@ -1,0 +1,33 @@
+{
+  "name": "inventory-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "进销存 / 记账 / 记事本 移动版（iOS 14+ / TrollStore）",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "cap:init": "cap init",
+    "cap:add": "cap add ios",
+    "cap:sync": "cap sync ios",
+    "cap:copy": "cap copy ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^5.7.0",
+    "@capacitor/filesystem": "^5.2.0",
+    "@capacitor/ios": "^5.7.0",
+    "@capacitor/preferences": "^5.0.7",
+    "@rollup/rollup-win32-x64-msvc": "^4.62.2",
+    "jimp": "^0.22.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.7.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2"
+  }
+}

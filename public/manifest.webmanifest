@@ -1,0 +1,21 @@
+{
+  "name": "进销存管家",
+  "short_name": "进销存",
+  "description": "进销存 / 记账 / 记事本 移动版",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f8fa",
+  "theme_color": "#0a84ff",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
