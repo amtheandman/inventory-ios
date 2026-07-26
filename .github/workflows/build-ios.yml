@@ -23,8 +23,8 @@ jobs:
       - name: 构建 Web 资源（dist/）
         run: npm run build
 
-      - name: 同步 Web 资源到 iOS 工程（只拷贝资源，不动原生配置）
-        run: npx cap copy ios
+      - name: 同步 Web 资源并链接原生插件（cap sync 会把 @capacitor/filesystem 等插件写入 Podfile 并 pod install，否则 IPA 内无原生插件、数据无法落盘）
+        run: npx cap sync ios
 
       - name: 兜底确保共享 scheme 存在（Blueprint ID 504EC3031FED79650016851F）
         run: |
