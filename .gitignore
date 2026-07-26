@@ -2,6 +2,8 @@
 node_modules/
 dist/
 .cache/
+# 不提交 lock：CI 用 npm install 按运行平台（macOS）解析，避免 Windows 专属 rollup 二进制触发 EBADPLATFORM
+package-lock.json
 
 # Capacitor iOS 原生构建产物（Pods 不入库）
 ios/App/build/
